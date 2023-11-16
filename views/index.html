@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document download</title>
+</head>
+    <body>
+        
+
+        <button id="downloadBtn">Download Image</button>
+
+        <script>
+            document.getElementById('downloadBtn').addEventListener('click', async () => {
+            try {
+                // Sending a GET request to download the image file
+                const response = await fetch('http://localhost:3500/download', {
+                method: 'GET'
+                });
+
+                // Check if the response is successful and trigger the download
+                if (response.ok) {
+                const blob = await response.blob();
+
+                // Create a temporary link element to trigger the download
+                const url = window.URL.createObjectURL(new Blob([blob]));
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'example.jpg';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                } else {
+                throw new Error('Network response was not ok.');
+                }
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+            }
+            });
+        </script>
+    </body>
+</html>
